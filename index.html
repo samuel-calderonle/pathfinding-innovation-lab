@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pathfinding Innovation Lab & Benchmarking Engine</title>
+    <style>
+        :root {
+            --bg-main: #121212; --bg-panel: #1e1e1e; --bg-control: #2d2d2d;
+            --border-color: #3d3d3d; --text-main: #f0f0f0; --text-muted: #aaaaaa;
+            --accent-blue: #007acc; --accent-green: #28a745; --accent-red: #dc3545; --accent-yellow: #ffc107;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg-main); color: var(--text-main); margin: 0; padding: 20px;
+            display: flex; flex-direction: column; align-items: center;
+        }
+        header { text-align: center; max-width: 900px; margin-bottom: 20px; }
+        h1 { margin: 0 0 10px 0; font-size: 2.2rem; letter-spacing: -0.5px; }
+        header p { color: var(--text-muted); margin: 0; font-size: 1rem; line-height: 1.5; }
+        .controls {
+            background-color: var(--bg-panel); border: 1px solid var(--border-color);
+            padding: 15px 25px; border-radius: 10px; display: flex; gap: 20px;
+            align-items: center; justify-content: center; flex-wrap: wrap; margin-bottom: 30px;
+        }
+        .control-group { display: flex; align-items: center; gap: 8px; }
+        label { font-size: 0.9rem; font-weight: 500; color: var(--text-muted); }
+        button, select {
+            background-color: var(--bg-control); color: var(--text-main); border: 1px solid var(--border-color);
+            padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 0.9rem;
+        }
+        button.primary { background-color: var(--accent-green); border-color: transparent; }
+        .grid-container { display: flex; gap: 25px; justify-content: center; flex-wrap: wrap; width: 100%; max-width: 1200px; }
+        .panel {
+            background-color: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 12px;
+            padding: 20px; display: flex; flex-direction: column; align-items: center; flex: 1; min-width: 320px; max-width: 360px;
+        }
+        .panel.invention { border: 2px dashed var(--accent-blue); background-color: rgba(0, 122, 204, 0.03); }
+        .panel h2 { margin: 0 0 15px 0; font-size: 1.2rem; font-weight: 600; }
+        .panel.invention h2 { color: var(--accent-blue); }
+        canvas { background-color: #0b0b0b; border: 1px solid var(--border-color); border-radius: 6px; cursor: pointer; }
+        .stats {
+            margin-top: 15px; width: 100%; background-color: #0b0b0b; border: 1px solid var(--border-color);
+            border-radius: 6px; padding: 12px; box-sizing: border-box; font-family: monospace; font-size: 0.85rem; line-height: 1.6;
+        }
+        .stats-line { display: flex; justify-content: space-between; }
+        .stats-label { color: var(--text-muted); }
+        .stats-val { font-weight: bold; }
+        .legend { display: flex; gap: 20px; margin-top: 25px; background-color: var(--bg-panel); padding: 12px 24px; border-radius: 8px; border: 1px solid var(--border-color); flex-wrap: wrap; justify-content: center; }
+        .legend-item { display: flex; align-items: center; gap: 8px; font-size: 0.85rem; }
+        .legend-color { width: 14px; height: 14px; border-radius: 3px; }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Pathfinding Innovation Lab</h1>
+        <p>Left-click and drag across maps to paint obstacles. Right-click and drag to erase them.</p>
+    </header>
+    <div class="controls">
+        <button id="clearBtn">Reset Environment</button>
+        <button id="runBtn" class="primary">Execute Benchmark</button>
+        <div class="control-group">
+            <label for="speedSelect">Velocity Mode:</label>
+            <select id="speedSelect">
+                <option value="1">Instant Processing</option>
+                <option value="40">Fast Visualization</option>
+                <option value="150">Slow Step-by-Step</option>
+            </select>
+        </div>
+    </div>
+    <div class="grid-container">
+        <div class="panel">
+            <h2>1. Dijkstra's Algorithm</h2>
+            <canvas id="canvasDijkstra" width="300" height="300"></canvas>
+            <div class="stats">
+                <div class="stats-line"><span class="stats-label">Evaluated:</span><span class="stats-val" id="evalDijkstra">0</span></div>
+                <div class="stats-line"><span class="stats-label">Path Cost:</span><span class="stats-val" id="costDijkstra">0</span></div>
+                <div class="stats-line"><span class="stats-label">Engine State:</span><span class="stats-val" id="stateDijkstra">Idle</span></div>
+            </div>
+        </div>
+        <div class="panel">
+            <h2>2. A* Search Engine</h2>
+            <canvas id="canvasAStar" width="300" height="300"></canvas>
+            <div class="stats">
+                <div class="stats-line"><span class="stats-label">Evaluated:</span><span class="stats-val" id="evalAStar">0</span></div>
+                <div class="stats-line"><span class="stats-label">Path Cost:</span><span class="stats-val" id="costAStar">0</span></div>
+                <div class="stats-line"><span class="stats-label">Engine State:</span><span class="stats-val" id="stateAStar">Idle</span></div>
+            </div>
+        </div>
+        <div class="panel invention">
+            <h2>3. Your Custom Architecture</h2>
+            <canvas id="canvasInvention" width="300" height="300"></canvas>
+            <div class="stats">
+                <div class="stats-line"><span class="stats-label">Evaluated:</span><span class="stats-val" id="evalInvention">0</span></div>
+                <div class="stats-line"><span class="stats-label">Path Cost:</span><span class="stats-val" id="costInvention">0</span></div>
+                <div class="stats-line"><span class="stats-label">Engine State:</span><span class="stats-val" id="stateInvention">Ready</span></div>
+            </div>
+        </div>
+    </div>
+    <div class="legend">
+        <div class="legend-item"><div class="legend-color" style="background-color: var(--accent-green);"></div> Source Vector</div>
+        <div class="legend-item"><div class="legend-color" style="background-color: var(--accent-red);"></div> Target Vertex</div>
+        <div class="legend-item"><div class="legend-color" style="background-color: #555555;"></div> Static Obstacle</div>
+        <div class="legend-item"><div class="legend-color" style="background-color: rgba(0, 122, 204, 0.35);"></div> Explored Set</div>
+        <div class="legend-item"><div class="legend-color" style="background-color: var(--accent-yellow);"></div> Solution Path</div>
+    </div>
+    <!-- Script Injection Link -->
+    <script src="app.js"></script>
+</body>
+</html>
