@@ -1,5 +1,9 @@
 # 🚀 Pathfinding Innovation Lab & Benchmarking Engine
 
+> [!NOTE]
+> 🤖 **AI Exploration & Deployment Project**
+> This repository was built using AI to explore code deployment infrastructure. I do not claim authorship of the underlying algorithm math or programming logic.
+
 An interactive, real-time algorithmic playground built to visualize, profile, and stress-test pathfinding architectures. This tool evaluates the efficiency of classic search methodologies against custom structural optimizations using a localized 2D grid matrix topology.
 
 ---
