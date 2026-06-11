@@ -136,8 +136,7 @@ async function runAlgorithmEngine(engineKey, sortingSelectionHook, structuralHeu
     renderGridFrame(contexts[engineKey], closedTrackingSet, computedSolutionPath, operationSuccessful ? "Success!" : "Trapped", engineKey, frameIterationCount, pathCostTotal);
 }
 
-// THE GREEDY CRUSHER TRAP: Traditional A* Beats Your Invention
-// THE TRUE GREEDY DEAD-END TRAP: A* Search Wins
+// A MAZE TO TEST THE ALGORITHIMS
 
 // 1. Reset matrix to empty space
 grid = Array(ROWS).fill().map(() => Array(COLS).fill(0));
